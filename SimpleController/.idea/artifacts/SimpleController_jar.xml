@@ -1,0 +1,11 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="SimpleController:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/SimpleController_jar</output-path>
+    <root id="archive" name="SimpleController.jar">
+      <element id="module-output" name="SimpleController" />
+      <element id="directory" name="META-INF">
+        <element id="file-copy" path="$PROJECT_DIR$/src/main/webapp/META-INF/MANIFEST.MF" />
+      </element>
+    </root>
+  </artifact>
+</component>
