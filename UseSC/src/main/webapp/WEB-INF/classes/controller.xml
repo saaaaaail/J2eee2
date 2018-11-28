@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <sc-configuration>
-
     <controller>
         <action name="login" class="water.ustc.action.LoginAction" method="handleLogin">
             <result name="success" type="forward" value="pages/welcome.jsp"></result>

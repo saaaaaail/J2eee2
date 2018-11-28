@@ -24,24 +24,21 @@ public class XmlUtil {
         return xmlUtil;
     }
 
-    public String analyzeAction(String fp, String actionName) {
+    public String analyzeAction(String file, String actionName) {
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         try {
-            //通过文档构建器工厂获取一个文档构建器
             DocumentBuilder db = dbf.newDocumentBuilder();
-            //通过文档通过文档构建器构建一个文档实例
-            Document doc = db.parse(new File(fp));
-            //获取action的节点
+            Document doc = db.parse(new File(file));
             NodeList actions = doc.getElementsByTagName("action");
             int actionsLength = actions.getLength();
 
             for (int i = 0; i < actionsLength; i++) {
                 Node actionNode = actions.item(i);
-                //通过Node对象的getAttributes()方法获取全的属性值
+                //获取Node节点所有属性值
                 NamedNodeMap actionNodeMap = actionNode.getAttributes();
-                String nameString = actionNodeMap.getNamedItem("name").getNodeValue().toString();
-                String methodString = actionNodeMap.getNamedItem("method").getNodeValue().toString();
-                String classString = actionNodeMap.getNamedItem("class").getNodeValue().toString();
+                String nameString = actionNodeMap.getNamedItem("name").getNodeValue();
+                String methodString = actionNodeMap.getNamedItem("method").getNodeValue();
+                String classString = actionNodeMap.getNamedItem("class").getNodeValue();
                 String resultString;
                 if (nameString.equals(actionName)) {
                     //get单个节点中的子节点list
@@ -57,19 +54,18 @@ public class XmlUtil {
                         if (actionChildNodes.item(j).getNodeType() == Node.ELEMENT_NODE) {
                             if (actionChildNodes.item(j).getNodeName().toString().equals("result")) {//result
                                 NamedNodeMap resultMap = actionChildNodes.item(j).getAttributes();
-                                String resultName = resultMap.getNamedItem("name").getNodeValue().toString();;
-                                String resultType = resultMap.getNamedItem("type").getNodeValue().toString();;
-                                String resultValue = resultMap.getNamedItem("value").getNodeValue().toString();;
+                                String resultName = resultMap.getNamedItem("name").getNodeValue();
+                                String resultType = resultMap.getNamedItem("type").getNodeValue();
+                                String resultValue = resultMap.getNamedItem("value").getNodeValue();
 
                                 if (resultName.equals(resultString)) {
-                                    System.out.println(resultType + "," + resultValue);
                                     return resultType + "," + resultValue;
                                 }
                             }
                         }
                     }
                     //result不匹配
-                    return "no_result";
+                    return "result:failure";
                 }
             }
         } catch (ParserConfigurationException e) {
@@ -90,6 +86,6 @@ public class XmlUtil {
             e.printStackTrace();
         }
         //没有对应的action
-        return "no_action";
+        return "action:failure";
     }
 }

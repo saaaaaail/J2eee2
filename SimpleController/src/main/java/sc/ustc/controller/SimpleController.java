@@ -23,13 +23,14 @@ public class SimpleController extends HttpServlet {
 
         PrintWriter out = resp.getWriter();
         String actionName = getActionName(req);
-        out.println(actionName);
+        System.out.println(actionName);
 
         //xml解析获得匹配结果
-        String fp = this.getClass().getClassLoader().getResource("controller.xml").getPath();
+        String file = this.getClass().getClassLoader().getResource("controller.xml").getPath();
+        System.out.println("controller.xml: "+file);
         XmlUtil xmlUtil = XmlUtil.getInstance();
-        String result = xmlUtil.analyzeAction(fp,actionName);
-        out.println(result);
+        String result = xmlUtil.analyzeAction(file,actionName);
+        System.out.println(result);
 
         //根据结果执行跳转
         dispatch(req,resp,result,out);
@@ -55,16 +56,12 @@ public class SimpleController extends HttpServlet {
 
     private void dispatch(HttpServletRequest req, HttpServletResponse resp,String result,PrintWriter out){
         try {
-            switch (result){
-                case "no_action": out.println("不可识别的action请求");break;
-                case "no_result": out.println("没有请求的资源");break;
-                default: {
-                    String[] tmp = result.split(",");
-                    switch (tmp[0]){
-                        case "forward": out.println(tmp[1]);req.getRequestDispatcher(tmp[1]).forward(req,resp);break;
-                        case "redirect": out.println(tmp[1]);resp.sendRedirect(tmp[1]);break;
-                    }
-                }
+            String[] tmp = result.split(",");
+            switch (tmp[0]){
+                case "forward": out.println(tmp[1]);req.getRequestDispatcher(tmp[1]).forward(req,resp);break;
+                case "redirect": out.println(tmp[1]);resp.sendRedirect(tmp[1]);break;
+                case "action:failure": out.println("不可识别的action请求");break;
+                case "result:failure": out.println("没有请求的资源");break;
             }
         } catch (ServletException e) {
             e.printStackTrace();
